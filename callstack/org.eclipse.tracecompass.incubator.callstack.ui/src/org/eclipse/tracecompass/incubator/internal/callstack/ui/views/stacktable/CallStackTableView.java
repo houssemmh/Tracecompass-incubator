@@ -37,6 +37,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.tracecompass.analysis.os.linux.core.event.aspect.LinuxPidAspect;
 import org.eclipse.tracecompass.incubator.callstack.core.flamechart.IEventCallStackProvider;
 import org.eclipse.tracecompass.tmf.core.event.ITmfEvent;
 import org.eclipse.tracecompass.tmf.core.signal.TmfEventSelectedSignal;
@@ -225,13 +226,16 @@ public class CallStackTableView extends TmfView {
             fSymbolProviders.putAll(trace, symbolProviders);
         }
 
+        Integer pId = TmfTraceUtils.resolveIntEventAspectOfClassForEvent(event.getTrace(), LinuxPidAspect.class, event);
+        int pid = (pId == null) ? -1 : pId.intValue();
+
         Map<String, Collection<Object>> stacks = new HashMap<>();
         for (IEventCallStackProvider provider : analysisModules) {
             Map<String, Collection<Object>> stack = provider.getCallStack(event);
             stacks.putAll(stack);
         }
 
-        treeViewer.setInput(convertStack(stacks, symbolProviders));
+        treeViewer.setInput(convertStack(event.getTimestamp().toNanos(), pid, stacks, symbolProviders));
     }
 
     private class StackTableEntry {
@@ -274,11 +278,11 @@ public class CallStackTableView extends TmfView {
         private String fName;
         private List<StackTableEntry> fChildren;
 
-        StackTableStringEntry(StackTableRootEntry entry, String name, Collection<Object> list, Collection<ISymbolProvider> symbolProviders) {
+        StackTableStringEntry(StackTableRootEntry entry, String name, Collection<Object> list, long time, int pid, Collection<ISymbolProvider> symbolProviders) {
             super(entry);
             entry.addEntry(this);
             fName = name;
-            fChildren = list.stream().map(l -> createCallSiteEntry(this, l, symbolProviders)).collect(Collectors.toList());
+            fChildren = list.stream().map(l -> createCallSiteEntry(this, l, time, pid, symbolProviders)).collect(Collectors.toList());
         }
 
         @Override
@@ -292,9 +296,9 @@ public class CallStackTableView extends TmfView {
         }
     }
 
-    private StackTableEntry createCallSiteEntry(StackTableStringEntry entry, Object callsite, Collection<ISymbolProvider> symbolProviders) {
+    private StackTableEntry createCallSiteEntry(StackTableStringEntry entry, Object callsite, long time, int pid, Collection<ISymbolProvider> symbolProviders) {
         if (callsite instanceof Long) {
-            String symbol = SymbolProviderUtils.getSymbolText(symbolProviders, 21576, 0L, (Long) callsite);
+            String symbol = SymbolProviderUtils.getSymbolText(symbolProviders, pid, time, (Long) callsite);
             return new StackTableObjEntry(entry, symbol);
         }
         return new StackTableObjEntry(entry, callsite);
@@ -314,10 +318,10 @@ public class CallStackTableView extends TmfView {
         }
     }
 
-    private Object convertStack(Map<String, Collection<Object>> stack, Collection<@NonNull ISymbolProvider> symbolProviders) {
+    private Object convertStack(long time, int pid, Map<String, Collection<Object>> stack, Collection<@NonNull ISymbolProvider> symbolProviders) {
         StackTableRootEntry rootEntry = new StackTableRootEntry();
         for (Entry<String, Collection<Object>> entry: stack.entrySet()) {
-            new StackTableStringEntry(rootEntry, entry.getKey(), entry.getValue(), symbolProviders);
+            new StackTableStringEntry(rootEntry, entry.getKey(), entry.getValue(), time, pid, symbolProviders);
         }
         return rootEntry;
     }
