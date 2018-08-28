@@ -28,7 +28,7 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.tm.terminal.control" version="0.0.0"/>
-<repository location="http://download.eclipse.org/tm/terminal/updates/4.4milestones/20180312/"/>
+<repository location="http://download.eclipse.org/tm/terminal/updates/4.4milestones/20180611/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <repository location="http://download.eclipse.org/tools/cdt/launchbar/milestones/oxygen.2"/>
@@ -106,9 +106,9 @@
 <unit id="org.eclipse.swt.tools.spies" version="0.0.0"/>
 <unit id="org.eclipse.ui.trace" version="0.0.0"/>
 <unit id="org.eclipse.ui.views.log" version="0.0.0"/>
-<unit id="a.jre.javase" version="9.0.0"/>
-<unit id="config.a.jre.javase" version="9.0.0"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.8milestones/S-4.8M6-201803080630/"/>
+<unit id="a.jre.javase" version="10.0.0"/>
+<unit id="config.a.jre.javase" version="10.0.0"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.8/R-4.8-201806110500/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.tracecompass.testtraces.tracecompass-test-traces-ctf" version="1.7.2"/>
@@ -123,7 +123,7 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xsd" version="0.0.0"/>
-<repository location="http://download.eclipse.org/modeling/emf/emf/builds/milestone/S201803080939/"/>
+<repository location="http://download.eclipse.org/modeling/emf/emf/builds/release/2.14/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.tracecompass.ctf.feature.group" version="0.0.0"/>
